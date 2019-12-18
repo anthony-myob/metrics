@@ -37,7 +37,7 @@ const BUILDKITE_API_KEY = process.argv[4];
 function determineLeadTimeInMinutes(builds) {
   const branch = 'master';
   const unit = 'Minutes';
-  return determineAverageLeadTime(builds, branch, unit);
+  return Math.round(determineAverageLeadTime(builds, branch, unit) * 100) / 100;
 }
 
 function determineDeploymentFrequencyForOneWeek(builds) {
