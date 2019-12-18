@@ -16,15 +16,15 @@ const BUILDKITE_API_KEY = process.argv[4];
   const output = {
     deployments: {
       oneWeek: {
-        buildConversionRate: determineBuildConversionRateForOneWeek(builds),
+        buildConversionRate: determineBuildConversionRate(builds, 1, 'Week'),
         frequency: determineDeploymentFrequencyForOneWeek(builds),
       },
       oneMonth: {
-        buildConversionRate: determineBuildConversionRateForOneMonth(builds),
+        buildConversionRate: determineBuildConversionRate(builds, 1 , 'Month'),
         frequency: determineDeploymentFrequencyForOneMonth(builds),
       },
       threeMonths: {
-        buildConversionRate: determineBuildConversionRateForThreeMonths(builds),
+        buildConversionRate: determineBuildConversionRate(builds, 3, 'Months'),
         frequency: determineDeploymentFrequencyForThreeMonths(builds),
       },
     },
@@ -58,20 +58,8 @@ function determineDeploymentFrequencyForThreeMonths(builds) {
   return determineDeploymentFrequency(builds, branch, cutoffDateTimeString);
 }
 
-function determineBuildConversionRateForOneWeek(builds) {
+function determineBuildConversionRate(builds, amount, unit) {
   const branch = 'master';
-  const cutoffDateTimeString = moment().subtract(1, 'Week').format();
-  return determineDeploymentFrequency(builds, branch, cutoffDateTimeString) / determineTotalBuilds(builds, branch, cutoffDateTimeString) * 100;
-}
-
-function determineBuildConversionRateForOneMonth(builds) {
-  const branch = 'master';
-  const cutoffDateTimeString = moment().subtract(1, 'Month').format();
-  return determineDeploymentFrequency(builds, branch, cutoffDateTimeString) / determineTotalBuilds(builds, branch, cutoffDateTimeString) * 100;
-}
-
-function determineBuildConversionRateForThreeMonths(builds) {
-  const branch = 'master';
-  const cutoffDateTimeString = moment().subtract(3, 'Months').format();
-  return determineDeploymentFrequency(builds, branch, cutoffDateTimeString) / determineTotalBuilds(builds, branch, cutoffDateTimeString) * 100;
+  const cutoffDateTimeString = moment().subtract(amount, unit).format();
+  return Math.round(determineDeploymentFrequency(builds, branch, cutoffDateTimeString) / determineTotalBuilds(builds, branch, cutoffDateTimeString) * 100 * 100) / 100;
 }
