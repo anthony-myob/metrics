@@ -15,17 +15,17 @@ const BUILDKITE_API_KEY = process.argv[4];
 
   const output = {
     deployments: {
-      oneWeek: {
-        buildConversionRate: determineBuildConversionRate(builds, 1, 'Week'),
-        frequency: determineDeploymentFrequencyForOneWeek(builds),
+      sevenDays: {
+        buildConversionRate: determineBuildConversionRate(builds, 7, 'Days'),
+        frequency: determineDeploymentFrequencyFor(builds, 7, 'Days'),
       },
-      oneMonth: {
-        buildConversionRate: determineBuildConversionRate(builds, 1 , 'Month'),
-        frequency: determineDeploymentFrequencyForOneMonth(builds),
+      thirtyDays: {
+        buildConversionRate: determineBuildConversionRate(builds, 30 , 'Days'),
+        frequency: determineDeploymentFrequencyFor(builds, 30, 'Days'),
       },
-      threeMonths: {
-        buildConversionRate: determineBuildConversionRate(builds, 3, 'Months'),
-        frequency: determineDeploymentFrequencyForThreeMonths(builds),
+      ninetyDays: {
+        buildConversionRate: determineBuildConversionRate(builds, 90, 'Days'),
+        frequency: determineDeploymentFrequencyFor(builds, 90, 'Days'),
       },
     },
     leadTimeInMinutes: determineLeadTimeInMinutes(builds),
@@ -40,21 +40,9 @@ function determineLeadTimeInMinutes(builds) {
   return Math.round(determineAverageLeadTime(builds, branch, unit) * 100) / 100;
 }
 
-function determineDeploymentFrequencyForOneWeek(builds) {
+function determineDeploymentFrequencyFor(builds, amount, unit) {
   const branch = 'master';
-  const cutoffDateTimeString = moment().subtract(1, 'Week').format();
-  return determineDeploymentFrequency(builds, branch, cutoffDateTimeString);
-}
-
-function determineDeploymentFrequencyForOneMonth(builds) {
-  const branch = 'master';
-  const cutoffDateTimeString = moment().subtract(1, 'Month').format();
-  return determineDeploymentFrequency(builds, branch, cutoffDateTimeString);
-}
-
-function determineDeploymentFrequencyForThreeMonths(builds) {
-  const branch = 'master';
-  const cutoffDateTimeString = moment().subtract(3, 'Months').format();
+  const cutoffDateTimeString = moment().subtract(amount, unit).format();
   return determineDeploymentFrequency(builds, branch, cutoffDateTimeString);
 }
 
