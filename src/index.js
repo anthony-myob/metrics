@@ -13,31 +13,39 @@ const BUILDKITE_API_KEY = process.argv[4];
   const builds = await getAllPipelineBuilds(GRAPHQL_URI, BUILDKITE_API_KEY, PIPELINE);
   console.log('Found', builds.length, builds.length > 1 ? 'builds' : 'build');
 
+  const now = moment();
+  const sevenDaysAgo = now.clone().subtract(7, 'Days');
+  const thirtyDaysAgo = now.clone().subtract(30, 'Days');
+  const ninetyDaysAgo = now.clone().subtract(90, 'Days');
+
   const output = {
     sevenDays: {
       buildConversionRate: determineBuildConversionRate(builds, 7, 'Days'),
       frequency: determineDeploymentFrequencyFor(builds, 7, 'Days'),
+      leadTimeInMinutes: determineLeadTimeInMinutesFor(builds, sevenDaysAgo.format()),
     },
     thirtyDays: {
       buildConversionRate: determineBuildConversionRate(builds, 30 , 'Days'),
       frequency: determineDeploymentFrequencyFor(builds, 30, 'Days'),
+      leadTimeInMinutes: determineLeadTimeInMinutesFor(builds, thirtyDaysAgo.format()),
     },
     ninetyDays: {
       buildConversionRate: determineBuildConversionRate(builds, 90, 'Days'),
       frequency: determineDeploymentFrequencyFor(builds, 90, 'Days'),
+      leadTimeInMinutes: determineLeadTimeInMinutesFor(builds, ninetyDaysAgo.format()),
     },
     allTime: {
-      leadTimeInMinutes: determineLeadTimeInMinutes(builds),
+      leadTimeInMinutes: determineLeadTimeInMinutesFor(builds),
     },
   }
 
   console.log('Measurements:', JSON.stringify(output, null, 2));
 })();
 
-function determineLeadTimeInMinutes(builds) {
+function determineLeadTimeInMinutesFor(builds, cutoffDateTimeString) {
   const branch = 'master';
-  const unit = 'Minutes';
-  return Math.round(determineAverageLeadTime(builds, branch, unit) * 100) / 100;
+  const measurement = 'Minutes';
+  return Math.round(determineAverageLeadTime(builds, branch, measurement, cutoffDateTimeString) * 100) / 100;
 }
 
 function determineDeploymentFrequencyFor(builds, amount, unit) {
