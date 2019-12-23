@@ -20,18 +20,18 @@ const BUILDKITE_API_KEY = process.argv[4];
 
   const output = {
     sevenDays: {
-      buildConversionRate: determineBuildConversionRate(builds, 7, 'Days'),
-      frequency: determineDeploymentFrequencyFor(builds, 7, 'Days'),
+      buildConversionRate: determineBuildConversionRate(builds, sevenDaysAgo.format()),
+      frequency: determineDeploymentFrequencyFor(builds, sevenDaysAgo.format()),
       leadTimeInMinutes: determineLeadTimeInMinutesFor(builds, sevenDaysAgo.format()),
     },
     thirtyDays: {
-      buildConversionRate: determineBuildConversionRate(builds, 30 , 'Days'),
-      frequency: determineDeploymentFrequencyFor(builds, 30, 'Days'),
+      buildConversionRate: determineBuildConversionRate(builds, thirtyDaysAgo.format()),
+      frequency: determineDeploymentFrequencyFor(builds, thirtyDaysAgo.format()),
       leadTimeInMinutes: determineLeadTimeInMinutesFor(builds, thirtyDaysAgo.format()),
     },
     ninetyDays: {
-      buildConversionRate: determineBuildConversionRate(builds, 90, 'Days'),
-      frequency: determineDeploymentFrequencyFor(builds, 90, 'Days'),
+      buildConversionRate: determineBuildConversionRate(builds, ninetyDaysAgo.format()),
+      frequency: determineDeploymentFrequencyFor(builds, ninetyDaysAgo.format()),
       leadTimeInMinutes: determineLeadTimeInMinutesFor(builds, ninetyDaysAgo.format()),
     },
     allTime: {
@@ -48,14 +48,12 @@ function determineLeadTimeInMinutesFor(builds, cutoffDateTimeString) {
   return Math.round(determineAverageLeadTime(builds, branch, measurement, cutoffDateTimeString) * 100) / 100;
 }
 
-function determineDeploymentFrequencyFor(builds, amount, unit) {
+function determineDeploymentFrequencyFor(builds, cutoffDateTimeString) {
   const branch = 'master';
-  const cutoffDateTimeString = moment().subtract(amount, unit).format();
   return determineDeploymentFrequency(builds, branch, cutoffDateTimeString);
 }
 
-function determineBuildConversionRate(builds, amount, unit) {
+function determineBuildConversionRate(builds, cutoffDateTimeString) {
   const branch = 'master';
-  const cutoffDateTimeString = moment().subtract(amount, unit).format();
   return Math.round(determineDeploymentFrequency(builds, branch, cutoffDateTimeString) / determineTotalBuilds(builds, branch, cutoffDateTimeString) * 100 * 100) / 100;
 }
