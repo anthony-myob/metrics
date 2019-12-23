@@ -14,21 +14,21 @@ const BUILDKITE_API_KEY = process.argv[4];
   console.log('Found', builds.length, builds.length > 1 ? 'builds' : 'build');
 
   const output = {
-    deployments: {
-      sevenDays: {
-        buildConversionRate: determineBuildConversionRate(builds, 7, 'Days'),
-        frequency: determineDeploymentFrequencyFor(builds, 7, 'Days'),
-      },
-      thirtyDays: {
-        buildConversionRate: determineBuildConversionRate(builds, 30 , 'Days'),
-        frequency: determineDeploymentFrequencyFor(builds, 30, 'Days'),
-      },
-      ninetyDays: {
-        buildConversionRate: determineBuildConversionRate(builds, 90, 'Days'),
-        frequency: determineDeploymentFrequencyFor(builds, 90, 'Days'),
-      },
+    sevenDays: {
+      buildConversionRate: determineBuildConversionRate(builds, 7, 'Days'),
+      frequency: determineDeploymentFrequencyFor(builds, 7, 'Days'),
     },
-    leadTimeInMinutes: determineLeadTimeInMinutes(builds),
+    thirtyDays: {
+      buildConversionRate: determineBuildConversionRate(builds, 30 , 'Days'),
+      frequency: determineDeploymentFrequencyFor(builds, 30, 'Days'),
+    },
+    ninetyDays: {
+      buildConversionRate: determineBuildConversionRate(builds, 90, 'Days'),
+      frequency: determineDeploymentFrequencyFor(builds, 90, 'Days'),
+    },
+    allTime: {
+      leadTimeInMinutes: determineLeadTimeInMinutes(builds),
+    },
   }
 
   console.log('Measurements:', JSON.stringify(output, null, 2));
