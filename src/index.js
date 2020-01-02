@@ -55,5 +55,6 @@ function determineDeploymentFrequencyFor(builds, cutoffDateTimeString) {
 
 function determineBuildConversionRate(builds, cutoffDateTimeString) {
   const branch = 'master';
-  return Math.round(determineDeploymentFrequency(builds, branch, cutoffDateTimeString) / determineTotalBuilds(builds, branch, cutoffDateTimeString) * 100 * 100) / 100;
+  const result = Math.round(determineDeploymentFrequency(builds, branch, cutoffDateTimeString) / determineTotalBuilds(builds, branch, cutoffDateTimeString) * 100 * 100) / 100;
+  return isNaN(result) ? 0 : result;
 }
