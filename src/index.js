@@ -21,16 +21,19 @@ const BUILDKITE_API_KEY = process.argv[4];
   const output = {
     sevenDays: {
       buildConversionRate: determineBuildConversionRate(builds, sevenDaysAgo.format()),
+      builds: determineTotalBuilds(builds, 'master', sevenDaysAgo.format()),
       deployments: determineDeploymentFrequencyFor(builds, sevenDaysAgo.format()),
       leadTimeInMinutes: determineLeadTimeInMinutesFor(builds, sevenDaysAgo.format()),
     },
     thirtyDays: {
       buildConversionRate: determineBuildConversionRate(builds, thirtyDaysAgo.format()),
+      builds: determineTotalBuilds(builds, 'master', thirtyDaysAgo.format()),
       deployments: determineDeploymentFrequencyFor(builds, thirtyDaysAgo.format()),
       leadTimeInMinutes: determineLeadTimeInMinutesFor(builds, thirtyDaysAgo.format()),
     },
     ninetyDays: {
       buildConversionRate: determineBuildConversionRate(builds, ninetyDaysAgo.format()),
+      builds: determineTotalBuilds(builds, 'master', ninetyDaysAgo.format()),
       deployments: determineDeploymentFrequencyFor(builds, ninetyDaysAgo.format()),
       leadTimeInMinutes: determineLeadTimeInMinutesFor(builds, ninetyDaysAgo.format()),
     },
