@@ -4,42 +4,43 @@ const determineTotalBuilds = require('./determineTotalBuilds');
 
 describe('determineTotalBuilds', () => {
 
-  it('includes builds for a specified branch after a specified date', () => {
-    const branch = 'master';
+  it('includes builds on master', () => {
+    const onMaster = true;
     const cutoffDateTime = moment('2019-12-18T00:00:00.000Z');
 
     const builds = [{
       branch: 'master',
-      finishedAt: cutoffDateTime.clone().add(2, 'Days').format(),
-    }, {
-      branch: 'master',
+      finishedAt: cutoffDateTime.clone().add(1, 'Day').format(),
+    },
+    {
+      branch: 'not master',
       finishedAt: cutoffDateTime.clone().add(1, 'Day').format(),
     }];
 
-    const result = determineTotalBuilds(builds, branch, cutoffDateTime.format());
+    const result = determineTotalBuilds(builds, onMaster, cutoffDateTime.format());
 
-    expect(result).toEqual(2);
+    expect(result).toEqual(1);
   });
 
-  it('does not include builds for non-specified branches after a specified date', () => {
-    const branch = 'master';
+  it('includes builds not on master', () => {
+    const onMaster = false;
     const cutoffDateTime = moment('2019-12-18T00:00:00.000Z');
 
     const builds = [{
       branch: 'master',
-      finishedAt: cutoffDateTime.clone().add(2, 'Days').format(),
+      finishedAt: cutoffDateTime.clone().add(1, 'Days').format(),
     }, {
-      branch: 'notMaster',
+      branch: 'not master',
       finishedAt: cutoffDateTime.clone().add(1, 'Day').format(),
     }];
 
-    const result = determineTotalBuilds(builds, branch, cutoffDateTime.format());
+    const result = determineTotalBuilds(builds, onMaster, cutoffDateTime.format());
 
     expect(result).toEqual(1);
   });
 
   it('does not include builds prior to the specified date', () => {
-    const branch = 'master';
+    const onMaster = true;
     const cutoffDateTime = moment('2019-12-18T00:00:00.000Z');
 
     const builds = [{
@@ -50,7 +51,7 @@ describe('determineTotalBuilds', () => {
       finishedAt: cutoffDateTime.clone().subtract(1, 'Day').format(),
     }];
 
-    const result = determineTotalBuilds(builds, branch, cutoffDateTime.format());
+    const result = determineTotalBuilds(builds, onMaster, cutoffDateTime.format());
 
     expect(result).toEqual(0);
   });
