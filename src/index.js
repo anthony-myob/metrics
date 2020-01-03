@@ -2,7 +2,7 @@ const moment = require('moment-timezone');
 
 const getAllPipelineBuilds = require('./getAllPipelineBuilds');
 const determineAverageLeadTime = require('./determineAverageLeadTime');
-const determineDeploymentFrequency = require('./determineDeploymentFrequency');
+const getBuildCount = require('./getBuildCount');
 const determineTotalBuilds = require('./determineTotalBuilds');
 
 const PIPELINE = process.argv[2];
@@ -17,24 +17,26 @@ const BUILDKITE_API_KEY = process.argv[4];
   const sevenDaysAgo = now.clone().subtract(7, 'Days');
   const thirtyDaysAgo = now.clone().subtract(30, 'Days');
   const ninetyDaysAgo = now.clone().subtract(90, 'Days');
+  const MASTER = 'master';
+  const DEPLOYED_STATE = 'PASSED';
 
   const output = {
     sevenDays: {
       buildConversionRate: determineBuildConversionRate(builds, sevenDaysAgo.format()),
-      builds: determineTotalBuilds(builds, 'master', sevenDaysAgo.format()),
-      deployments: determineDeploymentFrequencyFor(builds, sevenDaysAgo.format()),
+      builds: determineTotalBuilds(builds, MASTER, sevenDaysAgo.format()),
+      deployments: getBuildCount(builds, MASTER, DEPLOYED_STATE, sevenDaysAgo.format()),
       leadTimeInMinutes: determineLeadTimeInMinutesFor(builds, sevenDaysAgo.format()),
     },
     thirtyDays: {
       buildConversionRate: determineBuildConversionRate(builds, thirtyDaysAgo.format()),
-      builds: determineTotalBuilds(builds, 'master', thirtyDaysAgo.format()),
-      deployments: determineDeploymentFrequencyFor(builds, thirtyDaysAgo.format()),
+      builds: determineTotalBuilds(builds, MASTER, thirtyDaysAgo.format()),
+      deployments: getBuildCount(builds, MASTER, DEPLOYED_STATE, thirtyDaysAgo.format()),
       leadTimeInMinutes: determineLeadTimeInMinutesFor(builds, thirtyDaysAgo.format()),
     },
     ninetyDays: {
       buildConversionRate: determineBuildConversionRate(builds, ninetyDaysAgo.format()),
-      builds: determineTotalBuilds(builds, 'master', ninetyDaysAgo.format()),
-      deployments: determineDeploymentFrequencyFor(builds, ninetyDaysAgo.format()),
+      builds: determineTotalBuilds(builds, MASTER, ninetyDaysAgo.format()),
+      deployments: getBuildCount(builds, MASTER, DEPLOYED_STATE, ninetyDaysAgo.format()),
       leadTimeInMinutes: determineLeadTimeInMinutesFor(builds, ninetyDaysAgo.format()),
     },
     allTime: {

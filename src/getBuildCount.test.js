@@ -1,8 +1,8 @@
 const moment = require('moment-timezone');
 
-const determineDeploymentFrequency = require('./determineDeploymentFrequency');
+const getBuildCount = require('./getBuildCount');
 
-describe('determineDeploymentFrequency', () => {
+describe('getBuildCount', () => {
 
   it('includes PASSED builds for a specified branch after a specified date', () => {
     const branch = 'master';
@@ -18,7 +18,7 @@ describe('determineDeploymentFrequency', () => {
       finishedAt: cutoffDateTime.clone().add(1, 'Day').format(),
     }];
 
-    const result = determineDeploymentFrequency(builds, branch, cutoffDateTime.format());
+    const result = getBuildCount(builds, branch, cutoffDateTime.format());
 
     expect(result).toEqual(2);
   });
@@ -33,7 +33,7 @@ describe('determineDeploymentFrequency', () => {
       finishedAt: cutoffDateTime.clone().add(2, 'Days').format(),
     }];
 
-    const result = determineDeploymentFrequency(builds, branch, cutoffDateTime.format());
+    const result = getBuildCount(builds, branch, cutoffDateTime.format());
 
     expect(result).toEqual(0);
   });
@@ -48,7 +48,7 @@ describe('determineDeploymentFrequency', () => {
       finishedAt: cutoffDateTime.clone().add(2, 'Days').format(),
     }];
 
-    const result = determineDeploymentFrequency(builds, branch, cutoffDateTime.format());
+    const result = getBuildCount(builds, branch, cutoffDateTime.format());
 
     expect(result).toEqual(0);
   });
@@ -63,7 +63,7 @@ describe('determineDeploymentFrequency', () => {
       finishedAt: cutoffDateTime.clone().add(2, 'Days').format(),
     }];
 
-    const result = determineDeploymentFrequency(builds, branch, cutoffDateTime.format());
+    const result = getBuildCount(builds, branch, cutoffDateTime.format());
 
     expect(result).toEqual(0);
   });
@@ -90,7 +90,7 @@ describe('determineDeploymentFrequency', () => {
       finishedAt: cutoffDateTime.clone().subtract(1, 'Day').format(),
     }];
 
-    const result = determineDeploymentFrequency(builds, branch, cutoffDateTime.format());
+    const result = getBuildCount(builds, branch, cutoffDateTime.format());
 
     expect(result).toEqual(0);
   });
