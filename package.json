@@ -14,7 +14,7 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "start": "node ./src/index.js tax-compliance-migration-webservice https://graphql.buildkite.com/v1 $BUILDKITE_API_KEY "
+    "start": "node ./src/index.js $BUILDKITE_PIPELINE https://graphql.buildkite.com/v1 $BUILDKITE_API_KEY"
   },
   "keywords": [],
   "author": "",
