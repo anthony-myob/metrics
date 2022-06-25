@@ -6,7 +6,7 @@
   "dependencies": {
     "lodash.get": "^4.4.2",
     "moment-timezone": "^0.5.27",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.7",
     "num-words": "^1.0.1",
     "percentile": "^1.2.2"
   },
